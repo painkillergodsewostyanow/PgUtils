@@ -1,2 +1,2 @@
 # PgUtils
-data struct, abstract data struct, algorithm,  
+data struct, abstract data struct, data type, algorithm,  
