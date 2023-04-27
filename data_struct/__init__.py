@@ -1,1 +1,2 @@
-from .Lists import *
+from .TypedList import TypedList
+from .LinkedList import LinkedList
