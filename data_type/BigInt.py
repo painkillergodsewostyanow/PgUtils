@@ -4,8 +4,9 @@ class BigInt:
                     "Q", "R", "S", "T", "U", "V", "W", "X",
                     "Y", "Z"]
 
-    def __init__(self, arg1=None, arg2=None, max_digit_before_letters=100):
+    def __init__(self, arg1=None, arg2=None, max_digit_before_letters=100, base=100):
 
+        self.base = base
         self.max_digit_before_letters = max_digit_before_letters
 
         if isinstance(arg1, BigInt):
@@ -22,14 +23,13 @@ class BigInt:
     def __get_mantissa_and_p_from_int(self, integer):
         p = 0
         while integer > self.max_digit_before_letters:
-            integer //= 10
+            integer //= self.base
             p += 1
-
-        mantissa = round(integer)
-        return mantissa, p
+        print(round(integer), p)
+        return round(integer), p
 
     def __int__(self):
-        return round(self.mantissa * 10 ** self.p)
+        return round(self.mantissa * self.base ** self.p)
 
     def __str__(self):
         if self.p > len(self.__CHARACTERS):
@@ -42,8 +42,11 @@ class BigInt:
             return f"{self.mantissa}{count * self.__CHARACTERS[-1]}{self.__CHARACTERS[p_copy - 1]}"
         return f"{self.mantissa} {self.__CHARACTERS[self.p - 1]}"
 
+    def __repr__(self):
+        return self.__str__()
 
-b1 = BigInt(25 * 10 ** 111)
+
+b1 = BigInt(25 * 100 ** 111)
 b2 = BigInt(b1)
 b3 = BigInt(25, 111)
 
