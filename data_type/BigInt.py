@@ -27,10 +27,10 @@ class BigInt:
         while integer > self.max_digit_before_letters:
             integer //= self.base
             p += 1
-        return round(integer), p
+        return integer, p
 
     def __int__(self):
-        return round(self.mantissa * self.base ** self.p)
+        return self.mantissa * self.base ** self.p
 
     def __str__(self):
         if self.p > len(self.__CHARACTERS):
@@ -52,11 +52,10 @@ class BigInt:
         return self.__str__()
 
 
-b1 = BigInt(25 * 10 ** 150)
+b1 = BigInt(25*10**150)
 b2 = BigInt(b1)
 b3 = BigInt(25, 150)
 
-print(f"test: Int 25 * 10^150 size = {sys.getsizeof(25*10**150)} BigInt size = {sys.getsizeof(b1)}")
+print(f"test: Int 25 * 10^150 size = {sys.getsizeof(25*10**150)} BigInt size = {sys.getsizeof(BigInt(25*10**150))}")
 print(b1, b2, b3)
 print(int(b1), int(b2), int(b3), sep="\n")
-
