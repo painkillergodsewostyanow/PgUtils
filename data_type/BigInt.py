@@ -40,14 +40,13 @@ class BigInt:
                 p_copy -= len(self.__CHARACTERS)
                 count += 1
 
-            if p_copy > 1:
+            if p_copy > 0:
                 return f"{self.mantissa}{count * self.__CHARACTERS[-1]}{self.__CHARACTERS[p_copy - 1]}"
             return f"{self.mantissa}{count * self.__CHARACTERS[-1]}"
 
         if self.p > 0:
             return f"{self.mantissa} {self.__CHARACTERS[self.p - 1]}"
-        else:
-            return str(self.mantissa)
+        return str(self.mantissa)
 
     def __repr__(self):
         return self.__str__()
