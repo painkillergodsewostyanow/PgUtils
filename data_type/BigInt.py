@@ -1,3 +1,6 @@
+import sys
+
+
 class BigInt:
     __CHARACTERS = ["A", "B", "C", "D", "E", "F", "G", "H",
                     "I", "J", "K", "L", "M", "N", "O", "P",
@@ -37,8 +40,14 @@ class BigInt:
                 p_copy -= len(self.__CHARACTERS)
                 count += 1
 
-            return f"{self.mantissa}{count * self.__CHARACTERS[-1]}{self.__CHARACTERS[p_copy - 1]}"
-        return f"{self.mantissa} {self.__CHARACTERS[self.p - 1]}"
+            if p_copy > 1:
+                return f"{self.mantissa}{count * self.__CHARACTERS[-1]}{self.__CHARACTERS[p_copy - 1]}"
+            return f"{self.mantissa}{count * self.__CHARACTERS[-1]}"
+
+        if self.p > 0:
+            return f"{self.mantissa} {self.__CHARACTERS[self.p - 1]}"
+        else:
+            return str(self.mantissa)
 
     def __repr__(self):
         return self.__str__()
@@ -48,5 +57,7 @@ b1 = BigInt(25 * 10 ** 150)
 b2 = BigInt(b1)
 b3 = BigInt(25, 150)
 
+print(f"test: Int 25 * 10^150 size = {sys.getsizeof(25*10**150)} BigInt size = {sys.getsizeof(b1)}")
 print(b1, b2, b3)
 print(int(b1), int(b2), int(b3), sep="\n")
+
