@@ -4,8 +4,7 @@ class BigInt:
                     "Q", "R", "S", "T", "U", "V", "W", "X",
                     "Y", "Z"]
 
-    def __init__(self, arg1=None, arg2=None, max_digit_before_letters=100, base=100):
-
+    def __init__(self, arg1=None, arg2=None, max_digit_before_letters=100, base=10):
         self.base = base
         self.max_digit_before_letters = max_digit_before_letters
 
@@ -25,7 +24,6 @@ class BigInt:
         while integer > self.max_digit_before_letters:
             integer //= self.base
             p += 1
-        print(round(integer), p)
         return round(integer), p
 
     def __int__(self):
@@ -46,9 +44,9 @@ class BigInt:
         return self.__str__()
 
 
-b1 = BigInt(25 * 100 ** 111)
+b1 = BigInt(25 * 10 ** 150)
 b2 = BigInt(b1)
-b3 = BigInt(25, 111)
+b3 = BigInt(25, 150)
 
 print(b1, b2, b3)
 print(int(b1), int(b2), int(b3), sep="\n")
