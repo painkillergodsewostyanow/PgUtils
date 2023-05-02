@@ -1,3 +1,4 @@
+from __future__ import annotations
 import sys
 
 
@@ -7,9 +8,20 @@ class BigInt:
                     "Q", "R", "S", "T", "U", "V", "W", "X",
                     "Y", "Z"]
 
-    def __init__(self, arg1=None, arg2=None, max_digit_before_letters=100, base=10):
-        self.base = base
-        self.max_digit_before_letters = max_digit_before_letters
+    def __init__(
+
+            self,
+            arg1: int | float | BigInt = None,
+            arg2: int = None,
+            max_digit_before_letters: int = 100,
+            base: int = 1000
+
+    ):
+
+        self.base: int = base
+        self.max_digit_before_letters: int = max_digit_before_letters
+        self.mantissa: int | float
+        self.p: int
 
         if isinstance(arg1, BigInt):
             self.mantissa = arg1.mantissa
@@ -18,19 +30,51 @@ class BigInt:
         elif isinstance(arg1, int) and not arg2:
             self.mantissa, self.p = self.__get_mantissa_and_p_from_int(arg1)
 
-        elif isinstance(arg1, int) and isinstance(arg2, int):
+        elif isinstance(arg1, float) and isinstance(arg2, int):
             self.mantissa = arg1
             self.p = arg2
 
-    def __get_mantissa_and_p_from_int(self, integer):
+        self.__update()
+
+    def __get_mantissa_and_p_from_int(self, integer: int) -> (float, int):
         p = 0
         while integer > self.max_digit_before_letters:
-            integer //= self.base
+            integer /= self.base
             p += 1
         return integer, p
 
-    def __int__(self):
-        return self.mantissa * self.base ** self.p
+    def __update(self) -> None:
+        while self.mantissa >= self.max_digit_before_letters:
+            self.mantissa /= self.base
+            self.p += 1
+
+    def __inc_power(self, p: int) -> BigInt:
+        result = BigInt(self.mantissa, self.p)
+        while result.p < p:
+            result.mantissa /= self.base
+            result.p += 1
+        return result
+
+    def __copy__(self) -> BigInt:
+        return BigInt(self.mantissa, self.p)
+
+    def __add__(self, other: BigInt | int) -> BigInt:
+        if not isinstance(other, BigInt):
+            if not isinstance(other, int):
+                raise ValueError
+
+            other = BigInt(other)
+
+        max_power = max(self.p, other.p)
+        val1 = self.__copy__().__inc_power(max_power)
+        val2 = other.__copy__().__inc_power(max_power)
+        return BigInt(val1.mantissa + val2.mantissa, max_power)
+
+    def __radd__(self, other: BigInt | int) -> BigInt:
+        return self + other
+
+    def __int__(self) -> int:
+        return round(self.mantissa * self.base ** self.p)
 
     def __str__(self):
         if self.p > len(self.__CHARACTERS):
@@ -41,21 +85,36 @@ class BigInt:
                 count += 1
 
             if p_copy > 0:
-                return f"{self.mantissa}{count * self.__CHARACTERS[-1]}{self.__CHARACTERS[p_copy - 1]}"
-            return f"{self.mantissa}{count * self.__CHARACTERS[-1]}"
+                return f"{self.mantissa:.1f}{count * self.__CHARACTERS[-1]}{self.__CHARACTERS[p_copy - 1]}"
+            return f"{self.mantissa:.1f}{count * self.__CHARACTERS[-1]}"
 
         if self.p > 0:
-            return f"{self.mantissa} {self.__CHARACTERS[self.p - 1]}"
-        return str(self.mantissa)
+            return f"{self.mantissa:.1f} {self.__CHARACTERS[self.p - 1]}"
+        return f"{self.mantissa:.1f}"
 
     def __repr__(self):
-        return self.__str__()
+        return f"{self.__class__.__name__}: (mantissa: {self.mantissa}, power: {self.p})"
+
+    def __mul__(self, other: int | float | BigInt) -> BigInt:
+
+        if isinstance(other, BigInt):
+            other = other.mantissa
+
+        result = BigInt(self.mantissa * other, self.p)
+        return result
+
+    def __rmul__(self, other: int | float | BigInt) -> BigInt:
+        return self * other
 
 
-b1 = BigInt(25*10**150)
-b2 = BigInt(b1)
-b3 = BigInt(25, 150)
+a = BigInt(5000)
 
-print(f"test: Int 25 * 10^150 size = {sys.getsizeof(25*10**150)} BigInt size = {sys.getsizeof(BigInt(25*10**150))}")
-print(b1, b2, b3)
-print(int(b1), int(b2), int(b3), sep="\n")
+print(int(a))
+
+for _ in range(100):
+    a += 10
+print(int(a))
+
+a *= 10
+
+print(int(a))
