@@ -1,5 +1,4 @@
 from __future__ import annotations
-import sys
 
 
 class BigInt:
@@ -13,13 +12,13 @@ class BigInt:
             self,
             arg1: int | float | BigInt = None,
             arg2: int = None,
-            max_digit_before_letters: int = 100,
+            max_mantissa: int = 100,
             base: int = 1000
 
     ):
 
         self.base: int = base
-        self.max_digit_before_letters: int = max_digit_before_letters
+        self.max_mantissa: int = max_mantissa
         self.mantissa: int | float
         self.p: int
 
@@ -38,13 +37,13 @@ class BigInt:
 
     def __get_mantissa_and_p_from_int(self, integer: int) -> (float, int):
         p = 0
-        while integer > self.max_digit_before_letters:
+        while integer > self.max_mantissa:
             integer /= self.base
             p += 1
         return integer, p
 
     def __update(self) -> None:
-        while self.mantissa >= self.max_digit_before_letters:
+        while self.mantissa >= self.max_mantissa:
             self.mantissa /= self.base
             self.p += 1
 
@@ -107,14 +106,3 @@ class BigInt:
         return self * other
 
 
-a = BigInt(5000)
-
-print(int(a))
-
-for _ in range(100):
-    a += 10
-print(int(a))
-
-a *= 10
-
-print(int(a))
