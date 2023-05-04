@@ -29,7 +29,7 @@ class BigInt:
         elif isinstance(arg1, int) and not arg2:
             self.mantissa, self.p = self.__get_mantissa_and_p_from_int(arg1)
 
-        elif isinstance(arg1, float) and isinstance(arg2, int):
+        elif isinstance(arg1, float | int) and isinstance(arg2, int):
             self.mantissa = arg1
             self.p = arg2
 
@@ -97,12 +97,11 @@ class BigInt:
     def __mul__(self, other: int | float | BigInt) -> BigInt:
 
         if isinstance(other, BigInt):
-            other = other.mantissa
+            other = other.mantissa * self.base ** self.p
 
         result = BigInt(self.mantissa * other, self.p)
         return result
 
     def __rmul__(self, other: int | float | BigInt) -> BigInt:
         return self * other
-
 
