@@ -7,28 +7,28 @@ class LinkedListObj:
 
 class LinkedList:
     def __init__(self):
-        self.head = None
-        self.tail = None
-        self.length = 0
+        self.__head = None
+        self.__tail = None
+        self.__length = 0
 
     def __check_and_actions_if_first_add(self, obj):
-        if self.tail is None:
-            if self.head is None:
-                self.head = obj
-                self.tail = obj
-                self.length += 1
+        if self.__tail is None:
+            if self.__head is None:
+                self.__head = obj
+                self.__tail = obj
+                self.__length += 1
                 return True
 
-    def __check_and_actions_if_first_del(self):
-        if self.length == 1:
-            self.head = None
-            self.tail = None
-            self.length -= 1
-
-        return True
+    def __check_and_actions_if_last_del(self):
+        if self.__length == 1:
+            self.__head = None
+            self.__tail = None
+            self.__length -= 1
+            return True
+        return
 
     def __get_by_index(self, index):
-        h = self.head
+        h = self.__head
         count = 0
         while h and count != index:
             h = h.next
@@ -38,7 +38,7 @@ class LinkedList:
     def __check_index(self, item):
         # TODO: add check slice
         if type(item) == int:
-            if not 0 <= item < self.length:
+            if not 0 <= item < self.__length:
                 raise IndexError('index out of range')
 
     def push_back(self, data):
@@ -47,11 +47,11 @@ class LinkedList:
         if self.__check_and_actions_if_first_add(obj):
             return
 
-        self.tail.next = obj
-        obj.prev = self.tail
-        self.tail = obj
+        self.__tail.next = obj
+        obj.prev = self.__tail
+        self.__tail = obj
 
-        self.length += 1
+        self.__length += 1
         return
 
     def push_front(self, data):
@@ -60,38 +60,48 @@ class LinkedList:
         if self.__check_and_actions_if_first_add(obj):
             return
 
-        self.head.prev = obj
-        obj.next = self.head
-        self.head = obj
+        self.__head.prev = obj
+        obj.next = self.__head
+        self.__head = obj
 
-        self.length += 1
+        self.__length += 1
         return
 
+    @property
     def last(self):
-        return self.tail
+        return self.__tail.data
 
+    @last.setter
+    def last(self, value):
+        self.__tail.data = value
+
+    @property
     def first(self):
-        return self.head
+        return self.__head.data
+
+    @first.setter
+    def first(self, value):
+        self.__head.data = value
 
     def pop_back(self):
-        if self.__check_and_actions_if_first_del():
+        if self.__check_and_actions_if_last_del():
             return
 
-        obj = self.tail.prev
+        obj = self.__tail.prev
         obj.next = None
-        self.tail = obj
-        self.length -= 1
+        self.__tail = obj
+        self.__length -= 1
 
         return obj
 
     def pop_front(self):
-        if self.__check_and_actions_if_first_del():
+        if self.__check_and_actions_if_last_del():
             return
 
-        obj = self.head.next
+        obj = self.__head.next
         obj.prev = None
-        self.head = obj
-        self.length -= 1
+        self.__head = obj
+        self.__length -= 1
 
         return obj
 
@@ -112,17 +122,23 @@ class LinkedList:
         return
 
     def __str__(self):
-        # TODO: norm str map
-        h = self.head
-        while h:
-            print(h.data)
-            h = h.next
-        return "test"
+        result = ""
+        for i in range(self.__length):
+            result += f" <-{self[i].data}-> "
+        if result:
+            return f"None {result} None"
+        return "None"
 
     def __len__(self):
-        return self.length
+        return self.__length
 
 
-
-
+lst = LinkedList()
+lst.push_front(123)
+lst.push_back(456)
+lst.push_back(789)
+lst.pop_front()
+lst.pop_back()
+lst.pop_front()
+print(lst)
 
