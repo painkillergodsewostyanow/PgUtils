@@ -1,3 +1,6 @@
+from copy import copy
+
+
 class LinkedListObj:
     def __init__(self, data=None):
         self.data = data
@@ -6,10 +9,14 @@ class LinkedListObj:
 
 
 class LinkedList:
-    def __init__(self):
+    def __init__(self, *args):
         self.__head = None
         self.__tail = None
         self.__length = 0
+
+        if args:
+            for item in args:
+                self.push_back(item)
 
     def __check_and_actions_if_first_add(self, obj):
         if self.__length == 0:
@@ -119,6 +126,17 @@ class LinkedList:
 
         return obj
 
+    def append(self, data):
+        self.push_back(data)
+
+    def insert(self, sequence):
+        # TODO:
+        pass
+
+    def __iter__(self):
+        for i in range(self.__length):
+            yield self.__get_by_index(i).data
+
     def __getitem__(self, item):
         result = None
 
@@ -126,8 +144,8 @@ class LinkedList:
             self.__check_index(item)
             result = self.__get_by_index(item).data
 
-        # TODO: add slice
         if isinstance(item, slice):
+
             if not item.start:
                 item = slice(0, item.stop, item.step)
 
@@ -143,7 +161,6 @@ class LinkedList:
         return result
 
     def __setitem__(self, key, value):
-        # TODO: add slice
         if isinstance(key, int):
             self.__check_index(key)
             self.__get_by_index(key).data = value
@@ -161,22 +178,10 @@ class LinkedList:
     def __len__(self):
         return self.__length
 
+    def __copy__(self):
+        result = LinkedList()
+        for data in self:
+            result.append(data)
 
-lst = LinkedList()
-lst.push_front(0)
-lst.push_back(1)
-lst.push_back(2)
-lst.push_back(3)
-lst.push_back(4)
-lst.push_back(5)
-lst.push_back(6)
-lst.push_back(7)
-lst.push_back(8)
-lst.push_back(9)
-lst.push_back(10)
-
-print(lst[::])
-print(lst[:11])
-print(lst[0:])
-print(lst[::3])
+        return result
 
